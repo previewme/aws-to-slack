@@ -1,7 +1,7 @@
 {
-  "name": "typescript-template",
-  "version": "1.0.0",
-  "description": "Template for creating typescript lambda functions",
+  "name": "cloudwatch-events-to-slack",
+  "version": "0.0.1",
+  "description": "Processes Cloudwatch events and forwards them to Slack App",
   "main": "index.js",
   "scripts": {
     "build": "tsc",

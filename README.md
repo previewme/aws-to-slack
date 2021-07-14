@@ -1,32 +1,13 @@
-# typescript-lambda
+# cloudwatch-events-to-slack
 
-[![CI Workflow](https://github.com/previewme/lambda-typescript/actions/workflows/ci.yml/badge.svg)](https://github.com/previewme/lambda-typescript/actions/workflows/ci.yml)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=previewme_lambda-typescript&metric=coverage)](https://sonarcloud.io/dashboard?id=previewme_lambda-typescript)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=previewme_lambda-typescript&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=previewme_lambda-typescript)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=previewme_lambda-typescript&metric=alert_status)](https://sonarcloud.io/dashboard?id=previewme_lambda-typescript)
+[![CI Workflow](https://github.com/previewme/cloudwatch-events-to-slack/actions/workflows/ci.yml/badge.svg)](https://github.com/previewme/cloudwatch-events-to-slack/actions/workflows/ci.yml)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=previewme_cloudwatch-events-to-slack&metric=coverage)](https://sonarcloud.io/dashboard?id=previewme_cloudwatch-events-to-slack)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=previewme_cloudwatch-events-to-slack&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=previewme_cloudwatch-events-to-slack)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=previewme_cloudwatch-events-to-slack&metric=alert_status)](https://sonarcloud.io/dashboard?id=previewme_cloudwatch-events-to-slack)
 
-This is a template repository for creating typescript lambda projects.
+This AWS lambda function processes the following Cloudwatch events and forwards them to a Slack App webhook.
 
-After cloning this template, the following steps need to be carried out:
-
-1. Add the project to sonarcloud.
-2. The following files need to be modified to suit your project.
-3. Update the sonarcloud badges
-
-### package.json
-
-* name
-* version
-* description
-* license
-
-### sonar-project.properties
-
-* sonar.projectKey
-* sonar.links.homepage
-* sonar.links.ci
-* sonar.links.scm
-* sonar.links.issue
+* Cloudwatch Alarms
 
 ## Build
 
