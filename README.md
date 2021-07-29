@@ -5,7 +5,9 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=previewme_cloudwatch-events-to-slack&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=previewme_cloudwatch-events-to-slack)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=previewme_cloudwatch-events-to-slack&metric=alert_status)](https://sonarcloud.io/dashboard?id=previewme_cloudwatch-events-to-slack)
 
-This AWS lambda function processes the following Cloudwatch events and forwards them to a Slack App webhook.
+Based on [aws-to-slack](https://github.com/arabold/aws-to-slack).
+
+This AWS lambda function processes the following AWS events from Amazon SNS and forwards them to a Slack App webhook.
 
 * Cloudwatch Alarms
 

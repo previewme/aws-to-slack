@@ -1,7 +1,11 @@
 {
   "name": "cloudwatch-events-to-slack",
   "version": "0.0.1",
-  "description": "Processes Cloudwatch events and forwards them to Slack App",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:previewme/aws-to-slack.git"
+  },
+  "description": "Processes AWS events and forwards them to a Slack App",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -16,16 +20,18 @@
   },
   "dependencies": {
     "@types/aws-lambda": "8.10.77",
-    "aws-lambda": "1.0.6"
+    "aws-lambda": "1.0.6",
+    "axios": "0.21.1",
+    "aws-sdk": "2.955.0"
   },
   "devDependencies": {
     "@types/jest": "26.0.23",
     "@typescript-eslint/eslint-plugin": "4.28.1",
     "@typescript-eslint/parser": "4.28.1",
     "eslint": "7.29.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "8.3.0",
     "eslint-plugin-jest": "24.3.6",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "3.4.0",
     "jest": "27.0.6",
     "jest-sonar-reporter": "2.0.0",
     "prettier": "2.3.2",

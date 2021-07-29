@@ -1,0 +1,30 @@
+{
+  "AlarmName": "BhavikTestAlarm",
+  "AlarmDescription": "Only for testing",
+  "AWSAccountId": "123456789012",
+  "NewStateValue": "ALARM",
+  "NewStateReason": "Threshold Crossed: 1 datapoint (10.0) was greater than or equal to the threshold (1.0).",
+  "StateChangeTime": "2021-07-23T05:12:31.100+0000",
+  "Region": "Asia Pacific (Sydney)",
+  "AlarmArn": "arn:aws:cloudwatch:ap-southeast-2:123456789012:alarm:BhavikTestAlarm",
+  "OldStateValue": "INSUFFICIENT_DATA",
+  "Trigger": {
+    "MetricName": "HTTPCode_Target_2XX_Count",
+    "Namespace": "AWS/ApplicationELB",
+    "StatisticType": "Statistic",
+    "Statistic": "AVERAGE",
+    "Unit": "Seconds",
+    "Dimensions": [
+      {
+        "value": "app/awseb-AWSEB-1JA3VHFYBDTSC/b6ef09806b7d05cb",
+        "name": "LoadBalancer"
+      }
+    ],
+    "Period": 300,
+    "EvaluationPeriods": 1,
+    "ComparisonOperator": "GreaterThanThreshold",
+    "Threshold": 100,
+    "TreatMissingData": "- TreatMissingData:                    missing",
+    "EvaluateLowSampleCountPercentile": ""
+  }
+}

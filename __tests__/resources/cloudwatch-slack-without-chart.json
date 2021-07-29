@@ -1,0 +1,62 @@
+{
+  "text": "Jest Test\n*Alarm Reason:* <!channel>\nThreshold Crossed: 1 datapoint (10.0) was greater than or equal to the threshold (1.0).\n*Alarm Link:*\nhttps://console.aws.amazon.com/cloudwatch/home?region=ap-southeast-2#alarm:name=BhavikTestAlarm",
+  "blocks": [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "Jest Test",
+        "emoji": true
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*Alarm Reason:* <!channel>\n Threshold Crossed: 1 datapoint (10.0) was greater than or equal to the threshold (1.0).\n"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*Alarm Link:*\nhttps://console.aws.amazon.com/cloudwatch/home?region=ap-southeast-2#alarm:name=BhavikTestAlarm"
+      }
+    }
+  ],
+  "attachments": [
+    {
+      "color": "#8CC800",
+      "blocks": [
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*State Change:*\n INSUFFICIENT_DATA -> OK"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Region:*\n Asia Pacific (Sydney)"
+            }
+          ]
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "plain_text",
+              "text": "Account ID: 123456789012",
+              "emoji": true
+            },
+            {
+              "type": "plain_text",
+              "text": "Date: Fri Jul 23 2021 17:12:31 GMT+1200 (New Zealand Standard Time)",
+              "emoji": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
