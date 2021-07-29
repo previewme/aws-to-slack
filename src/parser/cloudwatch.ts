@@ -75,7 +75,7 @@ function buildSlackMessage(subject: string, region: string, alarm: CloudwatchAla
             type: 'context',
             elements: [
                 buildTextBlock('plain_text', `Account ID: ${alarm.AWSAccountId}`),
-                buildTextBlock('plain_text', `Date: ${new Date(alarm.StateChangeTime)}`)
+                buildTextBlock('plain_text', `Date: ${new Date(alarm.StateChangeTime).toISOString()}`)
             ]
         });
     }
