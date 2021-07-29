@@ -1,4 +1,4 @@
-# cloudwatch-events-to-slack
+# aws-to-slack
 
 [![CI Workflow](https://github.com/previewme/cloudwatch-events-to-slack/actions/workflows/ci.yml/badge.svg)](https://github.com/previewme/cloudwatch-events-to-slack/actions/workflows/ci.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=previewme_cloudwatch-events-to-slack&metric=coverage)](https://sonarcloud.io/dashboard?id=previewme_cloudwatch-events-to-slack)
