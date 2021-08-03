@@ -18,7 +18,7 @@ This AWS lambda function processes the following AWS events from Amazon SNS and 
 | Environment Variable | Description | Required |
 | --- | --- | --- |
 | SLACK_WEBHOOK | The webhook URL which is configured inside your Slack app | Yes |
-| ASSUME_ROLE_NAME* | The name of the role which is assumed to retrieve metric data from other AWS accounts. The role must allow cloudwatch:GetMetricStatistics permissions. | No |
+| ASSUME_ROLE_NAME | The name of the role which is assumed to retrieve metric data from other AWS accounts. The role must allow cloudwatch:GetMetricStatistics permissions. | No |
 
 ## Build
 
