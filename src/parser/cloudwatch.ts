@@ -41,7 +41,7 @@ export async function match(message: string): Promise<CloudwatchAlarm> {
 export async function parse(alarm: CloudwatchAlarm, subject: string): Promise<SlackMessage> {
     const region = regionNameToId[alarm.Region] || alarm.Region;
     try {
-        const chartUrl = await getChart(alarm.Trigger, region, alarm.StateChangeTime);
+        const chartUrl = await getChart(alarm.Trigger, region, alarm.StateChangeTime, alarm.AWSAccountId);
         return buildSlackMessage(subject, region, alarm, chartUrl);
     } catch (error) {
         console.info(`Could not build chart: ${error}`);

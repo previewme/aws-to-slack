@@ -1,14 +1,15 @@
 import { Trigger } from './cloudwatch';
-import { CloudWatch } from 'aws-sdk';
+import { CloudWatch, STS } from 'aws-sdk';
 import { Datapoint, Datapoints, GetMetricStatisticsInput } from 'aws-sdk/clients/cloudwatch';
+import { AssumeRoleResponse } from 'aws-sdk/clients/sts';
 
 const timePeriod = 60; // Statistics for every 60 seconds
 const timeOffset = 24 * 60 * 60; // Get statistics for the last 24 hours
 const width = 500;
 const height = 220;
 const chartSamples = 144; // Data points (1 per 10 minutes)
-const EXTENDED_MAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
-const EXTENDED_MAP_LENGTH = EXTENDED_MAP.length;
+const extendedMap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+const extendedMapLength = extendedMap.length;
 
 export interface timeSlot {
     text: string;
@@ -17,8 +18,37 @@ export interface timeSlot {
     value?: number;
 }
 
-export async function getStatistics(region: string, query: GetMetricStatisticsInput): Promise<Datapoints> {
-    const client = new CloudWatch({ region: region });
+async function getSecurityToken(region: string, awsAccountId: string, assumeRoleName: string): Promise<AssumeRoleResponse> {
+    const client = new STS({ region: region });
+    return await client
+        .assumeRole({
+            RoleArn: `arn:aws:iam::${awsAccountId}:role/${assumeRoleName}`,
+            RoleSessionName: 'alert-lambda'
+        })
+        .promise();
+}
+
+async function getCloudwatchClient(region: string, awsAccountId: string) {
+    const assumeRoleName = process.env.ASSUME_ROLE_NAME;
+    if (assumeRoleName !== undefined) {
+        const assumeRole = await getSecurityToken(region, awsAccountId, assumeRoleName);
+        if (assumeRole.Credentials === undefined) {
+            throw Error('Could not assume role');
+        }
+        return new CloudWatch({
+            region: region,
+            credentials: {
+                accessKeyId: assumeRole.Credentials.AccessKeyId,
+                secretAccessKey: assumeRole.Credentials.SecretAccessKey,
+                sessionToken: assumeRole.Credentials.SessionToken
+            }
+        });
+    }
+    return new CloudWatch({ region: region });
+}
+
+export async function getStatistics(region: string, query: GetMetricStatisticsInput, awsAccountId: string): Promise<Datapoints> {
+    const client = await getCloudwatchClient(region, awsAccountId);
     const statistics = await client.getMetricStatistics(query).promise();
     if (!statistics.Datapoints?.length) {
         throw Error('Cloudwatch did not return any data points');
@@ -93,15 +123,15 @@ function extendedEncode(timeSlots: timeSlot[], maximum: number) {
     let chartData = '';
     timeSlots.forEach((slot) => {
         if (slot.value !== undefined) {
-            const scaledVal = Math.floor((EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH * slot.value) / maximum);
-            if (scaledVal > EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH - 1) {
+            const scaledVal = Math.floor((extendedMapLength * extendedMapLength * slot.value) / maximum);
+            if (scaledVal > extendedMapLength * extendedMapLength - 1) {
                 chartData += '..';
             } else if (scaledVal < 0) {
                 chartData += '__';
             } else {
-                const quotient = Math.floor(scaledVal / EXTENDED_MAP_LENGTH);
-                const remainder = scaledVal - EXTENDED_MAP_LENGTH * quotient;
-                chartData += EXTENDED_MAP.charAt(quotient) + EXTENDED_MAP.charAt(remainder);
+                const quotient = Math.floor(scaledVal / extendedMapLength);
+                const remainder = scaledVal - extendedMapLength * quotient;
+                chartData += extendedMap.charAt(quotient) + extendedMap.charAt(remainder);
             }
         } else {
             chartData += '__';
@@ -140,7 +170,7 @@ function getChartUrl(labels: string[], trigger: Trigger, aggregates: timeSlot[])
     return 'https://chart.googleapis.com/chart?' + params.join('&');
 }
 
-export async function getChart(trigger: Trigger, region: string, time: string): Promise<string | undefined> {
+export async function getChart(trigger: Trigger, region: string, time: string, awsAccountId: string): Promise<string | undefined> {
     const query: GetMetricStatisticsInput = {
         Namespace: trigger.Namespace,
         MetricName: trigger.MetricName,
@@ -152,14 +182,12 @@ export async function getChart(trigger: Trigger, region: string, time: string): 
         Period: timePeriod
     };
 
-    const statistics = await getStatistics(region, query);
-    if (statistics !== undefined) {
+    const statistics = await getStatistics(region, query, awsAccountId);
+    if (query.Statistics !== undefined && statistics !== undefined) {
         const timeSlots = getTimeSlots(query.StartTime, query.EndTime);
         const labels = getLabels(timeSlots);
-        if (query.Statistics !== undefined) {
-            const aggregates = getAggregateValues(timeSlots, statistics, query.Statistics[0]);
-            return getChartUrl(labels, trigger, aggregates);
-        }
+        const aggregates = getAggregateValues(timeSlots, statistics, query.Statistics[0]);
+        return getChartUrl(labels, trigger, aggregates);
     }
-    return undefined;
+    throw Error('There are no datapoints to create the chart.');
 }

@@ -3,11 +3,27 @@ import { Datapoint, GetMetricStatisticsInput } from 'aws-sdk/clients/cloudwatch'
 import { default as alarm } from '../resources/cloudwatch-alarm-event.json';
 
 let mockGetMetricStatistics = jest.fn();
+const mockAssumeRole = jest.fn(() => {
+    return {
+        promise: jest.fn(() =>
+            Promise.resolve({
+                Credentials: {
+                    AccessKeyId: 'AWSAccessKeyId',
+                    SecretAccessKey: 'SecretAccessKey',
+                    SessionToken: 'SessionToken'
+                }
+            })
+        )
+    };
+});
 
 jest.mock('aws-sdk', () => {
     return {
         CloudWatch: jest.fn(() => {
             return { getMetricStatistics: mockGetMetricStatistics };
+        }),
+        STS: jest.fn(() => {
+            return { assumeRole: mockAssumeRole };
         })
     };
 });
@@ -16,10 +32,12 @@ describe('Ensure charts are correctly generated', () => {
     const startTime = new Date(1627431913789);
     const endTime = new Date(1627440553789);
     const testSlots = getTimeSlots(startTime, endTime);
+    const OLD_ENV = process.env;
 
     beforeEach(() => {
         jest.clearAllMocks();
         jest.resetModules();
+        process.env = { ...OLD_ENV };
 
         mockGetMetricStatistics = jest.fn(() => {
             return {
@@ -43,6 +61,10 @@ describe('Ensure charts are correctly generated', () => {
         });
     });
 
+    afterAll(() => {
+        process.env = OLD_ENV;
+    });
+
     test('Retrieves Cloudwatch metrics', async () => {
         const query: GetMetricStatisticsInput = {
             Namespace: 'Namespace',
@@ -55,10 +77,31 @@ describe('Ensure charts are correctly generated', () => {
             Period: 300
         };
 
-        const statistics = await getStatistics('us-east-1', query);
+        const statistics = await getStatistics('us-east-1', query, alarm.AWSAccountId);
         expect(statistics.length).toEqual(2);
         expect(mockGetMetricStatistics).toHaveBeenCalledTimes(1);
         expect(mockGetMetricStatistics).toHaveBeenCalledWith(query);
+    });
+
+    test('Retrieves Cloudwatch Metrics using assume role', async () => {
+        const query: GetMetricStatisticsInput = {
+            Namespace: 'Namespace',
+            MetricName: 'MetricName',
+            Dimensions: [{ Name: 'DimensionName', Value: 'DimensionValue' }],
+            Statistics: ['Average'],
+            Unit: 'Seconds',
+            StartTime: new Date(),
+            EndTime: new Date(),
+            Period: 300
+        };
+
+        process.env.ASSUME_ROLE_NAME = 'testRole';
+        const statistics = await getStatistics('us-east-1', query, alarm.AWSAccountId);
+
+        expect(statistics.length).toEqual(2);
+        expect(mockGetMetricStatistics).toHaveBeenCalledTimes(1);
+        expect(mockGetMetricStatistics).toHaveBeenCalledWith(query);
+        expect(mockAssumeRole).toHaveBeenCalledTimes(1);
     });
 
     test('No datapoints returned by Cloudwatch metrics', async () => {
@@ -78,7 +121,7 @@ describe('Ensure charts are correctly generated', () => {
                 promise: jest.fn(() => Promise.resolve({ Datapoints: [] }))
             };
         });
-        await expect(getStatistics('us-east-1', query)).rejects.toThrowError('Cloudwatch did not return any data points');
+        await expect(getStatistics('us-east-1', query, alarm.AWSAccountId)).rejects.toThrowError('Cloudwatch did not return any data points');
     });
 
     test('Ensure there are 144 time slots', async () => {
@@ -154,7 +197,7 @@ describe('Ensure charts are correctly generated', () => {
     });
 
     test('Ensure chart URL is correct', async () => {
-        const chartUrl = await getChart(alarm.Trigger, 'us-east-1', alarm.StateChangeTime);
+        const chartUrl = await getChart(alarm.Trigger, 'us-east-1', alarm.StateChangeTime, alarm.AWSAccountId);
         expect(chartUrl).toEqual(
             'https://chart.googleapis.com/chart?cht=ls&chma=20,15,5,5|0,20&chxt=x,y&chxl=0:|05:52|08:12|10:32|12:52|15:12|17:32|19:52|22:12|00:32|02:52|05:12&chco=af9cf4,FF0000&chls=2|.5,5,5&chs=500x220&chxr=1,0,105,9&chg=20,10,1,5&chdl=HTTPCode_Target_2XX_Count%20(AVERAGE%2F300s)&chdlp=b&chd=e:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888'
         );
@@ -166,6 +209,8 @@ describe('Ensure charts are correctly generated', () => {
                 promise: jest.fn(() => Promise.resolve({ Datapoints: [] }))
             };
         });
-        await expect(getChart(alarm.Trigger, 'us-east-1', alarm.StateChangeTime)).rejects.toThrowError('Cloudwatch did not return any data points');
+        await expect(getChart(alarm.Trigger, 'us-east-1', alarm.StateChangeTime, alarm.AWSAccountId)).rejects.toThrowError(
+            'Cloudwatch did not return any data points'
+        );
     });
 });
