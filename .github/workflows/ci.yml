@@ -141,7 +141,7 @@ jobs:
           status: ${{ env.WORKFLOW_CONCLUSION }}
           author_name: GitHub Action
           fields: repo,commit,message,author
-          mention: here
+          mention: channel
           if_mention: failure,cancelled
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
