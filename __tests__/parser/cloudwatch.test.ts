@@ -1,4 +1,5 @@
-import { match, parse } from '../../src/parser/cloudwatch';
+import { parse } from '../../src/parser/cloudwatch';
+import { match } from '../../src/parser/matcher';
 import { default as cloudwatchAlarmEvent } from '../resources/cloudwatch-alarm-event.json';
 import { default as slackMessageWithoutChart } from '../resources/cloudwatch-slack-without-chart.json';
 import { default as slackMessageWithChart } from '../resources/cloudwatch-slack-with-chart.json';

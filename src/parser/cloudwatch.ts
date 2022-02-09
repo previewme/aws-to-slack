@@ -30,14 +30,6 @@ export interface Dimension {
     value: string;
 }
 
-export async function match(message: string): Promise<CloudwatchAlarm> {
-    const alarm: CloudwatchAlarm = JSON.parse(message);
-    if (alarm.AlarmName && alarm.AlarmDescription) {
-        return alarm;
-    }
-    throw new Error('Not a cloudwatch alarm');
-}
-
 export async function parse(alarm: CloudwatchAlarm, subject: string): Promise<SlackMessage> {
     const region = regionNameToId[alarm.Region] || alarm.Region;
     try {
