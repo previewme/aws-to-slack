@@ -1,4 +1,4 @@
-import { parse } from '../../src/parser/cloudwatch';
+import { cloudwatchParse } from '../../src/parser/cloudwatch';
 import { match } from '../../src/parser/matcher';
 import { default as cloudwatchAlarmEvent } from '../resources/cloudwatch-alarm-event.json';
 import { default as slackMessageWithoutChart } from '../resources/cloudwatch-slack-without-chart.json';
@@ -25,14 +25,14 @@ describe('Ensure cloudwatch alarm events can be processed', () => {
         const mockGetChart = getChart as jest.MockedFunction<typeof getChart>;
         mockGetChart.mockRejectedValue(new Error('Could not get metrics'));
         cloudwatchAlarmEvent.NewStateValue = 'OK';
-        const actual = await parse(cloudwatchAlarmEvent, 'Jest Test');
+        const actual = await cloudwatchParse(cloudwatchAlarmEvent, 'Jest Test');
         expect(actual).toEqual(slackMessageWithoutChart);
     });
 
     test('Parse alarm with chart', async () => {
         const mockGetChart = getChart as jest.MockedFunction<typeof getChart>;
         mockGetChart.mockReturnValue(Promise.resolve('https://test.com/chart'));
-        const actual = await parse(cloudwatchAlarmEvent, 'Jest Test');
+        const actual = await cloudwatchParse(cloudwatchAlarmEvent, 'Jest Test');
         expect(actual).toEqual(slackMessageWithChart);
     });
 });

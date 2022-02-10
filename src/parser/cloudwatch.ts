@@ -30,7 +30,7 @@ export interface Dimension {
     value: string;
 }
 
-export async function parse(alarm: CloudwatchAlarm, subject: string): Promise<SlackMessage> {
+export async function cloudwatchParse(alarm: CloudwatchAlarm, subject: string): Promise<SlackMessage> {
     const region = regionNameToId[alarm.Region] || alarm.Region;
     try {
         const chartUrl = await getChart(alarm.Trigger, region, alarm.StateChangeTime, alarm.AWSAccountId);

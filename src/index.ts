@@ -1,5 +1,6 @@
 import { SNSEvent } from 'aws-lambda';
-import { parse } from './parser/cloudwatch';
+import { cloudwatchParse } from './parser/cloudwatch';
+import { codedeployParse } from './parser/codedeploy';
 import { match } from './parser/matcher';
 import { postMessage } from './slack';
 
@@ -9,9 +10,9 @@ export async function handler(event: SNSEvent): Promise<void> {
     try {
         const awsEvent = await match(message);
         if ('deploymentId' in awsEvent) {
-            console.info(awsEvent);
+            await postMessage(await codedeployParse(awsEvent, subject));
         } else {
-            await postMessage(await parse(awsEvent, subject));
+            await postMessage(await cloudwatchParse(awsEvent, subject));
         }
     } catch (error) {
         console.info(`Could not process event ${error}`);

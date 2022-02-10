@@ -21,13 +21,13 @@ interface DeploymentOverview {
     Succeeded: string;
 }
 
-export async function parse(event: CodedeployEvent, subject: string): Promise<SlackMessage> {
+export async function codedeployParse(event: CodedeployEvent, subject: string): Promise<SlackMessage> {
     return buildSlackMessage(event, subject);
 }
 
 function buildSlackMessage(event: CodedeployEvent, subject: string): SlackMessage {
     const { Failed, InProgress, Pending, Skipped, Succeeded } = event.deploymentOverview;
-    const message: SlackMessage = {
+    return {
         blocks: [buildHeader(subject), buildTextSection('mrkdwn', `<!channel>`)],
         attachments: [
             {
@@ -46,7 +46,6 @@ function buildSlackMessage(event: CodedeployEvent, subject: string): SlackMessag
             }
         ]
     };
-    return message;
 }
 
 function getMessageColour(status: string): string {
