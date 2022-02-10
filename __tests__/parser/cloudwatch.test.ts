@@ -18,7 +18,7 @@ describe('Ensure cloudwatch alarm events can be processed', () => {
     });
 
     test('Not a cloudwatch alarm', async () => {
-        await expect(match('{}')).rejects.toThrowError('Not a cloudwatch alarm');
+        await expect(match('{}')).rejects.toThrowError('Unable to process event as it is not recognised');
     });
 
     test('Parse alarm without chart', async () => {

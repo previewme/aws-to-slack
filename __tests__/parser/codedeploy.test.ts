@@ -10,7 +10,7 @@ describe('Ensure Codedeploy events can be processed', () => {
     });
 
     test('Not a Codedeploy event', async () => {
-        await expect(match('{}')).rejects.toThrowError('Not a codedeploy event');
+        await expect(match('{}')).rejects.toThrowError('Unable to process event as it is not recognised');
     });
 
     test('Parse event, should match codedeploySlack format', async () => {
