@@ -42,5 +42,6 @@ npm test
 The following will package the lambda function into a zip bundle to allow manual deployment.
 
 ```
+cd dist
 zip -q -r dist/lambda.zip node_modules dist
 ```
