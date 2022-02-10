@@ -11,7 +11,7 @@ describe('Ensure calls to slack are handled correctly', () => {
         jest.clearAllMocks();
         jest.resetModules();
         process.env = { ...OLD_ENV };
-        process.env.SLACK_WEBHOOK = 'https://hooks.slack.com/services/testwebhook';
+        process.env.SLACK_WEBHOOK_INCIDENTS = 'https://hooks.slack.com/services/testwebhook';
     });
 
     afterAll(() => {
@@ -19,8 +19,10 @@ describe('Ensure calls to slack are handled correctly', () => {
     });
 
     test('No slack webhook setup', async () => {
-        delete process.env.SLACK_WEBHOOK;
-        await expect(postMessage({ text: 'Hello world' })).rejects.toThrowError('Slack webhook endpoint not defined');
+        delete process.env.SLACK_WEBHOOK_INCIDENTS;
+        await expect(postMessage({ text: 'Hello world' }, process.env.SLACK_WEBHOOK_INCIDENTS)).rejects.toThrowError(
+            'Slack webhook endpoint not defined'
+        );
         expect(mockedAxios.post).not.toBeCalled();
     });
 
@@ -29,10 +31,10 @@ describe('Ensure calls to slack are handled correctly', () => {
         mockedAxios.post.mockResolvedValue(response);
 
         const message = { text: 'Hello world' };
-        const actual = await postMessage(message);
+        const actual = await postMessage(message, process.env.SLACK_WEBHOOK_INCIDENTS);
 
         expect(actual).toEqual(response.status);
-        expect(mockedAxios.post).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK, JSON.stringify(message), expect.any(Object));
+        expect(mockedAxios.post).toHaveBeenCalledWith(process.env.SLACK_WEBHOOK_INCIDENTS, JSON.stringify(message), expect.any(Object));
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     });
 
@@ -40,10 +42,13 @@ describe('Ensure calls to slack are handled correctly', () => {
         const response = { status: 500, data: 'Internal Server Error' };
         mockedAxios.post.mockResolvedValue(response);
         await expect(
-            postMessage({
-                text: 'Hello world',
-                blocks: []
-            })
+            postMessage(
+                {
+                    text: 'Hello world',
+                    blocks: []
+                },
+                process.env.SLACK_WEBHOOK_INCIDENTS
+            )
         ).rejects.toThrowError('Slack API error [HTTP:500]: Internal Server Error');
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);
     });
@@ -51,7 +56,7 @@ describe('Ensure calls to slack are handled correctly', () => {
     test('Client side error from Slack API', async () => {
         const response = { status: 400, statusText: 'Bad Request', data: 'Field not allowed' };
         mockedAxios.post.mockResolvedValue(response);
-        await expect(postMessage({ text: 'Hello world' })).rejects.toThrowError(
+        await expect(postMessage({ text: 'Hello world' }, process.env.SLACK_WEBHOOK_INCIDENTS)).rejects.toThrowError(
             'Slack API reports bad request [HTTP:400] Bad Request: Field not allowed'
         );
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);

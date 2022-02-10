@@ -10,9 +10,9 @@ export async function handler(event: SNSEvent): Promise<void> {
     try {
         const awsEvent = await match(message);
         if ('deploymentId' in awsEvent) {
-            await postMessage(await codedeployParse(awsEvent, subject));
+            await postMessage(await codedeployParse(awsEvent, subject), process.env.SLACK_WEBHOOK_CICD);
         } else {
-            await postMessage(await cloudwatchParse(awsEvent, subject));
+            await postMessage(await cloudwatchParse(awsEvent, subject), process.env.SLACK_WEBOOK_INCIDENTS);
         }
     } catch (error) {
         console.info(`Could not process event ${error}`);

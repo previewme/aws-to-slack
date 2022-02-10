@@ -37,8 +37,7 @@ export const COLOURS = {
     neutral: '#A8A8A8'
 };
 
-export async function postMessage(message: SlackMessage): Promise<number> {
-    const slackWebhookUrl = process.env.SLACK_WEBHOOK;
+export async function postMessage(message: SlackMessage, slackWebhookUrl: string | undefined): Promise<number> {
     if (slackWebhookUrl === undefined) {
         throw new Error('Slack webhook endpoint not defined');
     }
