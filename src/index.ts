@@ -7,11 +7,11 @@ export async function handler(event: SNSEvent): Promise<void> {
     const message = event.Records[0].Sns.Message;
     const subject = event.Records[0].Sns.Subject;
     try {
-        const event = await match(message);
-        if ('deploymentId' in event) {
-            console.info(event);
+        const awsEvent = await match(message);
+        if ('deploymentId' in awsEvent) {
+            console.info(awsEvent);
         } else {
-            await postMessage(await parse(event, subject));
+            await postMessage(await parse(awsEvent, subject));
         }
     } catch (error) {
         console.info(`Could not process event ${error}`);
