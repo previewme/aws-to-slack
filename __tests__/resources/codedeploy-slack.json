@@ -9,70 +9,84 @@
       }
     },
     {
-      "type": "section",
-      "fields": [
-        {
-          "type": "mrkdwn",
-          "text": "*Region*\nus-west-1"
-        },
-        {
-          "type": "mrkdwn",
-          "text": "*Account Id*\n111222333444"
-        }
-      ]
-    },
-    {
-      "type": "section",
-      "fields": [
-        {
-          "type": "mrkdwn",
-          "text": "*Event Trigger Name*\nTrigger-group-us-west-3-deploy-failed"
-        },
-        {
-          "type": "mrkdwn",
-          "text": "*Application Name*\nProductionApp-us-west-3"
-        }
-      ]
-    },
-    {
-      "type": "section",
-      "fields": [
-        {
-          "type": "mrkdwn",
-          "text": "*Deployment Id*\nd-75I7MBT7C"
-        },
-        {
-          "type": "mrkdwn",
-          "text": "*Deployment Group Name*\ndep-group-def-456"
-        }
-      ]
-    },
-    {
-      "type": "section",
-      "fields": [
-        {
-          "type": "mrkdwn",
-          "text": "*Create Time*\n1446744188.595"
-        },
-        {
-          "type": "mrkdwn",
-          "text": "*Complete Time*\n1446744190.402"
-        }
-      ]
-    },
-    {
-      "type": "section",
       "text": {
-        "type": "mrkdwn",
-        "text": "*Deployment Overview*\nFailed: 10, InProgress: 0, Pending: 0, Skipped: 0, Succeeded: 0"
-      }
-    },
+        "text": "<!channel>",
+        "type": "mrkdwn"
+      },
+      "type": "section"
+    }
+  ],
+  "attachments": [
     {
-      "type": "section",
-      "text": {
-        "type": "mrkdwn",
-        "text": "*Status*\nFailed"
-      }
+      "color": "#FF324D",
+      "blocks": [
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*Region*\nus-west-1"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Account Id*\n111222333444"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*Event Trigger Name*\nTrigger-group-us-west-3-deploy-failed"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Application Name*\nProductionApp-us-west-3"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*Deployment Id*\nd-75I7MBT7C"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Deployment Group Name*\ndep-group-def-456"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "fields": [
+            {
+              "type": "mrkdwn",
+              "text": "*Create Time*\n1446744188.595"
+            },
+            {
+              "type": "mrkdwn",
+              "text": "*Complete Time*\n1446744190.402"
+            }
+          ]
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Deployment Overview*\nFailed: 10, InProgress: 0, Pending: 0, Skipped: 0, Succeeded: 0"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*Status*\nFailed"
+          }
+        }
+      ]
     }
   ]
 }
