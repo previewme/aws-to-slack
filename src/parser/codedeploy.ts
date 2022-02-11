@@ -51,6 +51,8 @@ function buildSlackMessage(event: CodedeployEvent, subject: string): SlackMessag
 function getMessageColour(status: string): string {
     if (status === 'Failed') {
         return COLOURS.critical;
+    } else if (status === 'Succeeded') {
+        return COLOURS.ok;
     } else {
         return COLOURS.neutral;
     }

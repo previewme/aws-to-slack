@@ -12,7 +12,7 @@ export async function handler(event: SNSEvent): Promise<void> {
         if ('deploymentId' in awsEvent) {
             await postMessage(await codedeployParse(awsEvent, subject), process.env.SLACK_WEBHOOK_CICD);
         } else {
-            await postMessage(await cloudwatchParse(awsEvent, subject), process.env.SLACK_WEBOOK_INCIDENTS);
+            await postMessage(await cloudwatchParse(awsEvent, subject));
         }
     } catch (error) {
         console.info(`Could not process event ${error}`);
