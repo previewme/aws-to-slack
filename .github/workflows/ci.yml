@@ -144,4 +144,4 @@ jobs:
           mention: channel
           if_mention: failure,cancelled
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_INCIDENTS }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
