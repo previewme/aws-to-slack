@@ -15,10 +15,11 @@ This AWS lambda function processes the following AWS events from Amazon SNS and 
 
 ### Environment variables
 
-| Environment Variable | Description | Required |
-| --- | --- | --- |
-| SLACK_WEBHOOK | The webhook URL which is configured inside your Slack app | Yes |
-| ASSUME_ROLE_NAME | The name of the role which is assumed to retrieve metric data from other AWS accounts. The role must allow cloudwatch:GetMetricStatistics permissions. | No |
+| Environment Variable    | Description                                                                                                                                            | Required |
+|-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| SLACK_WEBHOOK_CICD      | The webhook URL for the announce-cicd channel in your Slack app.                                                                                       | Yes      |
+| SLACK_WEBHOOK_INCIDENTS | The webhook URL for the announce-incidents channel in you Slack app.                                                                                   | Yes      |
+| ASSUME_ROLE_NAME        | The name of the role which is assumed to retrieve metric data from other AWS accounts. The role must allow cloudwatch:GetMetricStatistics permissions. | No       |
 
 ## Build
 
@@ -42,5 +43,7 @@ npm test
 The following will package the lambda function into a zip bundle to allow manual deployment.
 
 ```
-zip -q -r dist/lambda.zip node_modules dist
+npm run build
+cd dist
+zip -q -r lambda.zip ../node_modules .
 ```

@@ -9,5 +9,5 @@ export async function match(message: string): Promise<CodedeployEvent | Cloudwat
     if (messageJSON.deploymentGroupName && messageJSON.deploymentId) {
         return messageJSON as CodedeployEvent;
     }
-    throw new Error('Not a cloudwatch alarm, Not a codedeploy event');
+    throw new Error('Unable to process event as it is not recognised');
 }
